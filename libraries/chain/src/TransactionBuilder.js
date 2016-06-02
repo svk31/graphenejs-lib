@@ -192,7 +192,8 @@ class TransactionBuilder {
         this.signatures = []
         this.signer_private_keys = []
         proposal_create_options.proposed_ops = proposed_ops;
-        this.add_type_operation("proposal_create", proposal_create_options);        
+        this.add_type_operation("proposal_create", proposal_create_options);
+        return this;
     }
     
     has_proposed_operation() {
