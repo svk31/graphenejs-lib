@@ -10,6 +10,7 @@ let emitter = ee.emitter();
 let op_history   = parseInt(object_type.operation_history, 10);
 let limit_order  = parseInt(object_type.limit_order, 10);
 let call_order  = parseInt(object_type.call_order, 10);
+let proposal = parseInt(object_type.proposal, 10);
 let balance_type  = parseInt(object_type.balance, 10);
 let vesting_balance_type  = parseInt(object_type.vesting_balance, 10);
 let witness_object_type  = parseInt(object_type.witness, 10);
@@ -20,6 +21,7 @@ let asset_object_type  = parseInt(object_type.asset, 10);
 
 let order_prefix = "1." + limit_order + "."
 let call_order_prefix = "1." + call_order + "."
+let proposal_prefix = "1." + proposal + "."
 let balance_prefix = "2." + parseInt(impl_object_type.account_balance,10) + "."
 let account_stats_prefix = "2." + parseInt(impl_object_type.account_statistics,10) + "."
 let asset_dynamic_data_prefix = "2." + parseInt(impl_object_type.asset_dynamic_data,10) + "."
@@ -1139,6 +1141,10 @@ class ChainStore
             this.objects_by_id = this.objects_by_id.set( account.get("id"), account );
           }
         }
+      // POROPOSAL OBJECT
+      } else if ( object.id.substring(0,proposal_prefix.length ) == proposal_prefix ) {
+        this.addProposalData(object.required_active_approvals, object.id);
+        this.addProposalData(object.required_owner_approvals, object.id);
       }
 
 
@@ -1201,6 +1207,21 @@ class ChainStore
             .sort().get(Math.floor( (this.chain_time_offset.length - 1) / 2 ))
         // console.log("median_offset", median_offset)
         return median_offset
+    }
+
+    addProposalData(approvals, objectId) {
+        approvals.forEach(id => {
+          let impactedAccount = this.objects_by_id.get(id);
+          if (impactedAccount) {
+            let proposals = impactedAccount.get("proposals");
+
+            if (!proposals.includes(objectId)) {
+              proposals = proposals.add(objectId);
+              impactedAccount = impactedAccount.set("proposals", proposals);
+              this._updateObject( impactedAccount.toJS(), false );
+            }
+          }
+        })
     }
 
 }
