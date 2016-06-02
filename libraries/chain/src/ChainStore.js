@@ -52,6 +52,7 @@ class ChainStore
       this.progress = 0;
       // this.chain_time_offset is used to estimate the blockchain time
       this.chain_time_offset = []
+      this.dispatchFrequency = 40;
    }
 
    /**
@@ -81,6 +82,10 @@ class ChainStore
        }).catch(err => {
         console.log("resetCache init error:", err);
        });
+   }
+
+   setDispatchFrequency(freq) {
+    this.dispatchFrequency = freq;
    }
 
    init() {
@@ -192,13 +197,13 @@ class ChainStore
 
    notifySubscribers()
    {
-      // Dispatch at most only once every 20 milliseconds
+      // Dispatch at most only once every x milliseconds
       if( ! this.dispatched ) {
          this.dispatched = true;
          setTimeout( ()=>{
             this.dispatched = false;
             this.subscribers.forEach( (callback) => { callback() } )
-         }, 20 );
+         }, this.dispatchFrequency );
       }
    }
 
