@@ -1,5 +1,7 @@
 // https://code.google.com/p/crypto-js
-var CryptoJS = require("crypto-js");
+var AES = require("crypto-js/aes");
+var encHex = require("crypto-js/enc-hex");
+var encBase64 = require("crypto-js/enc-base64");
 var assert = require("assert");
 var ByteBuffer = require("bytebuffer");
 var Long = ByteBuffer.Long;
@@ -26,8 +28,8 @@ class Aes {
     /** @arg {string} hash - A 128 byte hex string, typically one would call {@link fromSeed} instead. */
     static fromSha512(hash) {
         assert.equal(hash.length, 128, `A Sha512 in HEX should be 128 characters long, instead got ${hash.length}`);
-        var iv = CryptoJS.enc.Hex.parse(hash.substring(64, 96));
-        var key = CryptoJS.enc.Hex.parse(hash.substring(0, 64));
+        var iv = encHex.parse(hash.substring(64, 96));
+        var key = encHex.parse(hash.substring(0, 64));
         return new Aes(iv, key);
     };
     
@@ -134,14 +136,14 @@ class Aes {
     _decrypt_word_array(cipher) {
         // https://code.google.com/p/crypto-js/#Custom_Key_and_IV
         // see wallet_records.cpp master_key::decrypt_key
-        return CryptoJS.AES.decrypt({ ciphertext: cipher, salt: null}, this.key, {iv: this.iv});
+        return AES.decrypt({ ciphertext: cipher, salt: null}, this.key, {iv: this.iv});
     }
     
     /** @private */
     _encrypt_word_array(plaintext) {
         //https://code.google.com/p/crypto-js/issues/detail?id=85
-        var cipher = CryptoJS.AES.encrypt(plaintext, this.key, {iv: this.iv});
-        return CryptoJS.enc.Base64.parse(cipher.toString());
+        var cipher = AES.encrypt(plaintext, this.key, {iv: this.iv});
+        return encBase64.parse(cipher.toString());
     }
 
     /** This method does not use a checksum, the returned data must be validated some other way.
@@ -201,9 +203,9 @@ class Aes {
     decryptHex(cipher) {
         assert(cipher, "Missing cipher text");
         // Convert data into word arrays (used by Crypto)
-        var cipher_array = CryptoJS.enc.Hex.parse(cipher);
+        var cipher_array = encHex.parse(cipher);
         var plainwords = this._decrypt_word_array(cipher_array);
-        return CryptoJS.enc.Hex.stringify(plainwords);
+        return encHex.stringify(plainwords);
     }
     
     /** This method does not use a checksum, the returned data must be validated some other way.
@@ -213,9 +215,9 @@ class Aes {
     decryptHexToBuffer(cipher) {
         assert(cipher, "Missing cipher text");
         // Convert data into word arrays (used by Crypto)
-        var cipher_array = CryptoJS.enc.Hex.parse(cipher);
+        var cipher_array = encHex.parse(cipher);
         var plainwords = this._decrypt_word_array(cipher_array);
-        var plainhex = CryptoJS.enc.Hex.stringify(plainwords);
+        var plainhex = encHex.stringify(plainwords);
         return new Buffer(plainhex, 'hex');
     }
     
@@ -233,9 +235,9 @@ class Aes {
         @return {String} hex
     */
     encryptHex(plainhex) {
-        var plain_array = CryptoJS.enc.Hex.parse(plainhex);
+        var plain_array = encHex.parse(plainhex);
         var cipher_array = this._encrypt_word_array(plain_array);
-        return CryptoJS.enc.Hex.stringify(cipher_array);
+        return encHex.stringify(cipher_array);
     }
 }
 
