@@ -129,7 +129,7 @@ function makeSecureWS(ws_url) {
     if (!ws_url) {
             ws_url = "ws://localhost:8080";
     }
-    if (window && window.location && window.location.protocol === "https:") {
+    if (typeof window !== "undefined" && window.location && window.location.protocol === "https:") {
         ws_url = ws_url.replace("ws://", "wss://");
     }
 
