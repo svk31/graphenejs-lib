@@ -5,7 +5,7 @@ var Long = require('bytebuffer').Long;
 
 var secureRandom = require('secure-random');
 var hash = require('../../libraries/ecc/src/hash');
-var key = require('../../libraries/ecc/src/key_utils');
+var key = require('../../libraries/ecc/src/KeyUtils');
 
 describe("ECC", function() {
 
