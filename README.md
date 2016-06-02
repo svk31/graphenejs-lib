@@ -1,66 +1,76 @@
-# WORK IN PROGRESS
+# GrapheneJS (graphenejs-lib)
+
+Pure JavaScript Bitshares/Graphene library for node.js and browsers. Can be used to construct, sign and broadcast transactions in JavaScript, and to easily obtain data from the blockchain via public apis.
+
 Most of this code was written by [jcalfeee](https://github.com/jcalfee), my work was mostly just repackaging to a discrete npm package.
 
-Graphene JavaScript libraries: Transaction signing and websocket api.
+[![npm version](https://img.shields.io/npm/v/graphenejs-lib.svg?style=flat-square)](https://www.npmjs.com/package/graphenejs-lib)
 
-# Setup
+## Setup
 
-When using this from the "../web" in the browser, just run `npm install` here and your setup is complete.
-
-The following allows you to run programs or unit tests.
-
-## Tests
-Some tests use a witness node and may consume the CORE asset indefinitely.  Setup a [private testnet](https://github.com/cryptonomex/graphene/wiki/private-testnet).  
-
-
-Add the testing key to the new genesis.json:
-```js
-"initial_accounts": [
-    {
-      "name": "nathan",
-      "owner_key": "GPH6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV",
-      "active_key": "GPH6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV",
-      "is_lifetime_member": false
-    },
+This library can be obtained through npm:
 ```
-```js
-  "initial_balances": [{
-      "owner": "GPHFAbAx7yuxt725qSZvfwWqkdCwp9ZnUama",
-      "asset_symbol": "CORE",
-      "amount": "1000000000000000"
-    },
-```
-Balance claims in the "web" package:
-```js
-  "initial_vesting_balances": [ {
-      "owner": "GPHFAbAx7yuxt725qSZvfwWqkdCwp9ZnUama",
-      "asset_symbol": "BTS",
-      "amount": 50000000000,
-      "begin_timestamp": "2014-11-06T00:00:00",
-      "vesting_duration_seconds": 63072000,
-      "begin_balance": 50000000000
-    }
-  ],
+npm install graphene-crypto
 ```
 
-Commands for the `cli_wallet` required only once after starting the testnet chain.
-```bash
-set_password pw
-unlock pw
+## Usage
 
-import_key "nathan" 5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3
-import_balance nathan [5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3] true
+Three sub-libraries are included: `ECC`, `Chain` and `Serializer`. Generally only the `ECC` and `Chain` libraries need to be used directly.
+
+### Chain
+This library provides a websocket rpc connection and other utility functions to handle blockchain state. To obtain a websocket connection to the Openledger API and subscribe to any object updates, use the following code:
+
+```
+var {Apis} = require("graphene-crypto");
+Apis.instance("wss://bitshares.openledger.info/ws").init_promise.then((res) => {
+    console.log("connected to:", res[0].network);
+    Apis.instance().db_api().exec( "set_subscribe_callback", [ updateListener, true ] )
+});
+
+function updateListener(object) {
+    console.log("set_subscribe_callback:\n", object);
+}
+```
+The `set_subscribe_callback` callback (updateListener) will be called whenever an object on the blockchain changes. This is very powerful and can be used to listen to updates for specific accounts, assets or most anything else, as all state changes happens through object updates.
+
+The Chain library contains a complete state container called the ChainStore. The ChainStore will automatically configure the `set_subscribe_callback` and handle any incoming state changes appropriately. It uses Immutable js for storing its state, so all objects are return as immutable objects. It has its own `subscribe` method that can be used to register a callback that will be called whenever a state change happens.
+
+The ChainStore has several useful methods to retrieve, among other things, objects, assets and accounts using either object ids or asset/account names. These methods are synchronous and will return `undefined` to indicate fetching in progress, and `null` to indicate that the object does not exist.
+
+```
+var {Apis, ChainStore} = require("graphene-crypto");
+
+Apis.instance("wss://bitshares.openledger.info/ws").init_promise.then((res) => {
+    console.log("connected to:", res[0].network);
+    ChainStore.init().then(() => {
+        ChainStore.subscribe(updateState);
+    });
+});
+
+let dynamicGlobal = null;
+function updateState(object) {
+    dynamicGlobal = ChainStore.getObject("2.1.0");
+    console.log("ChainStore object update\n", dynamicGlobal ? dynamicGlobal.toJS() : dynamicGlobal);
+}
+
 ```
 
+### ECC
+The ECC library contains all the crypto functions for private and public keys as well as transaction creation/signing.
 
-# Wallet Server
-```bash
-# If you setup dependencies and environment here, you do not need to `npm install` again.
-# Look at README.md in `./programs/wallet-server`...
-cd programs/wallet-server
+As a quick example, here's how to generate a new private key from a seed (a brainkey for example):
+
+```
+var {PrivateKey, key} = require("graphene-crypto");
+
+let seed = "THIS IS A TERRIBLE BRAINKEY SEED WORD SEQUENCE";
+let pkey = PrivateKey.fromSeed( key.normalize_brainKey(seed) );
+
+console.log("\nPrivate key:", pkey.toWif());
+console.log("Public key :", pkey.toPublicKey().toString(), "\n");
 ```
 
-# ESDoc (beta)
+## ESDoc (beta)
 ```bash
 npm i -g esdoc esdoc-es7-plugin
 esdoc -c ./esdoc.json
