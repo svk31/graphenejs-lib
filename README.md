@@ -5,6 +5,8 @@ Pure JavaScript Bitshares/Graphene library for node.js and browsers. Can be used
 Most of this code was written by [jcalfeee](https://github.com/jcalfee), my work was mostly just repackaging to a discrete npm package.
 
 [![npm version](https://img.shields.io/npm/v/graphenejs-lib.svg?style=flat-square)](https://www.npmjs.com/package/graphenejs-lib)
+[![npm downloads](https://img.shields.io/npm/dm/graphenejs-lib.svg?style=flat-square)](https://www.npmjs.com/package/graphenejs-lib)
+
 
 ## Setup
 
@@ -20,6 +22,7 @@ Three sub-libraries are included: `ECC`, `Chain` and `Serializer`. Generally onl
 ### Chain
 This library provides a websocket rpc connection and other utility functions to handle blockchain state. To obtain a websocket connection to the Openledger API and subscribe to any object updates, use the following code:
 
+#### Api calls
 ```
 var {Apis} = require("graphene-crypto");
 Apis.instance("wss://bitshares.openledger.info/ws").init_promise.then((res) => {
@@ -33,6 +36,7 @@ function updateListener(object) {
 ```
 The `set_subscribe_callback` callback (updateListener) will be called whenever an object on the blockchain changes. This is very powerful and can be used to listen to updates for specific accounts, assets or most anything else, as all state changes happens through object updates.
 
+#### State container
 The Chain library contains a complete state container called the ChainStore. The ChainStore will automatically configure the `set_subscribe_callback` and handle any incoming state changes appropriately. It uses Immutable js for storing its state, so all objects are return as immutable objects. It has its own `subscribe` method that can be used to register a callback that will be called whenever a state change happens.
 
 The ChainStore has several useful methods to retrieve, among other things, objects, assets and accounts using either object ids or asset/account names. These methods are synchronous and will return `undefined` to indicate fetching in progress, and `null` to indicate that the object does not exist.
@@ -58,6 +62,7 @@ function updateState(object) {
 ### ECC
 The ECC library contains all the crypto functions for private and public keys as well as transaction creation/signing.
 
+#### Private keys
 As a quick example, here's how to generate a new private key from a seed (a brainkey for example):
 
 ```
@@ -69,6 +74,9 @@ let pkey = PrivateKey.fromSeed( key.normalize_brainKey(seed) );
 console.log("\nPrivate key:", pkey.toWif());
 console.log("Public key :", pkey.toPublicKey().toString(), "\n");
 ```
+
+#### Transactions
+TODO transaction signing example
 
 ## ESDoc (beta)
 ```bash
