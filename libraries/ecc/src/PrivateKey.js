@@ -85,7 +85,7 @@ class PrivateKey {
     
     
     /** ECIES */
-    get_shared_secret(public_key) {
+    get_shared_secret(public_key, legacy = false) {
         public_key = toPublic(public_key)
         let KB = public_key.toUncompressed().toBuffer()
         let KBP = Point.fromAffine(
@@ -96,6 +96,16 @@ class PrivateKey {
         let r = this.toBuffer()
         let P = KBP.multiply(BigInteger.fromBuffer(r))
         let S = P.affineX.toBuffer({size: 32})
+        /*
+        the input to sha512 must be exactly 32-bytes, to match the c++ implementation
+        of get_shared_secret.  Right now S will be shorter if the most significant
+        byte(s) is zero.  Pad it back to the full 32-bytes
+        */
+        if (!legacy && S.length < 32) {
+           pad = new Buffer(32 - S.length).fill(0); 
+           S = Buffer.concat([pad, S]);
+        }
+           
         // SHA512 used in ECIES
         return hash.sha512(S)
     }

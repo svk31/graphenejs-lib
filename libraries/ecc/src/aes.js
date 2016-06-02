@@ -44,10 +44,9 @@ class Aes {
         @arg {string|Buffer} message - Encrypted message containing a checksum
         @return {Buffer}
     */
-    static decrypt_with_checksum(private_key, public_key, nonce, message) {
+    static decrypt_with_checksum(private_key, public_key, nonce, message, legacy = false) {
         
         // Warning: Do not put `nonce = ""` in the arguments, in es6 this will not convert "null" into an emtpy string
-        
         if( nonce == null ) // null or undefined
             nonce = ""
         
@@ -55,8 +54,7 @@ class Aes {
             message = new Buffer(message, 'hex');
         }
         
-        var S = private_key.get_shared_secret(public_key);
-        
+        var S = private_key.get_shared_secret(public_key, legacy);
         // D E B U G
         // console.log('decrypt_with_checksum', {
         //     priv_to_pub: private_key.toPublicKey().toString(),
