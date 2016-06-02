@@ -1,7 +1,7 @@
 {
-  "name": "graphene-crypto",
-  "version": "1.0.0",
-  "description": "Graphene crypto library including websocket.  ",
+  "name": "graphenejs-lib",
+  "version": "0.1.0",
+  "description": "Pure JavaScript Bitshares/Graphene library for node.js and browsers.",
   "scripts": {
     "test": "mocha --recursive",
     "test:chain": "mocha ./test/chain --recursive",
@@ -12,17 +12,21 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jcalfee/plasma.git"
+    "url": "git+https://github.com/svk31/graphenejs-lib.git"
   },
-  "author": "cryptonomex",
+  "author": "Sigve Kvalsvik <bitsharesblocks@gmail.com> (https://github.com/svk31)",
+  "contributors": [
+    "James Calfee <jcalfee@cryptonomex.com> (https://github.com/jcalfee/)",
+    "Daniel Larimer <dan@cryptonomex.com> (https://github.com/bytemaster/)",
+    "Valentine Zavgorodnev <val@cryptonomex.com> (https://github.com/valzav/)"
+  ],
   "license": "BSD-2-Clause-FreeBSD",
   "bugs": {
-    "url": "https://github.com/jcalfee/plasma/issues"
+    "url": "https://github.com/svk31/graphenejs-lib/issues"
   },
   "engines": {
     "node": ">= 6.0.0"
   },
-  "homepage": "https://cryptonomex.com",
   "dependencies": {
     "ReconnectingWebSocket": "git+https://github.com/joewalnes/reconnecting-websocket.git",
     "bigi": "^1.4.1",
