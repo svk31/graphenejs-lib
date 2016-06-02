@@ -16,9 +16,9 @@
   },
   "author": "Sigve Kvalsvik <bitsharesblocks@gmail.com> (https://github.com/svk31)",
   "contributors": [
-    "James Calfee <jcalfee@cryptonomex.com> (https://github.com/jcalfee/)",
+    "James Calfee <james@jcalfee.info> (https://github.com/jcalfee/)",
     "Daniel Larimer <dan@cryptonomex.com> (https://github.com/bytemaster/)",
-    "Valentine Zavgorodnev <val@cryptonomex.com> (https://github.com/valzav/)"
+    "Valentine Zavgorodnev <valentine.zavgorodnev@gmail.com> (https://github.com/valzav/)"
   ],
   "license": "BSD-2-Clause-FreeBSD",
   "bugs": {
@@ -36,7 +36,6 @@
     "ecurve": "^1.0.2",
     "event-emitter": "^0.3.4",
     "immutable": "^3.7.6",
-    "secp256k1": "^2.0.7",
     "secure-random": "^1.1.1",
     "websocket": "^1.0.23"
   },
