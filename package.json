@@ -8,7 +8,7 @@
     "test:ecc": "mocha ./test/ecc --recursive",
     "test:serializer": "mocha ./test/serializer --recursive",
     "test:watch": "npm test -- --watch",
-    "build": "babel src --presets babel-preset-es2015 --out-dir dist",
+    "build": "babel lib --presets babel-preset-es2015 --out-dir dist",
     "prepublish": "npm run build",
     "doc": "esdoc -c esdoc.json"
   },
