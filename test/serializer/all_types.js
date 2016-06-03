@@ -1,8 +1,8 @@
-var { PrivateKey, PublicKey, Address } = require("../../libraries/ecc");
+var { PrivateKey, PublicKey, Address } = require("../../src/ecc");
 var assert = require('assert');
-var Serializer = require("../../libraries/serializer/src/serializer")
-var types = require('../../libraries/serializer/src/types');
-var ops = require('../../libraries/serializer/src/operations');
+var Serializer = require("../../src/serializer/src/serializer")
+var types = require('../../src/serializer/src/types');
+var ops = require('../../src/serializer/src/operations');
 
 var {
     //varint32,

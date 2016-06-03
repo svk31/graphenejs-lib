@@ -1,14 +1,14 @@
-var Convert = require('../../libraries/serializer/src/convert');
+var Convert = require('../../src/serializer/src/convert');
 var Long = require('bytebuffer').Long;
 
 var assert = require('assert');
-var type = require('../../libraries/serializer/src/types');
-var p = require('../../libraries/serializer/src/precision');
+var type = require('../../src/serializer/src/types');
+var p = require('../../src/serializer/src/precision');
 var th = require('./test_helper');
 
 var { is } = require("immutable");
-var { PublicKey, PrivateKey } = require("../../libraries/ecc");
-var {ChainConfig} = require("../../libraries/chain/");
+var { PublicKey, PrivateKey } = require("../../src/ecc");
+var {ChainConfig} = require("../../src/chain/");
 
 describe("types", function() {
 

@@ -1,6 +1,6 @@
 var assert = require("assert");
 var Immutable = require("immutable");
-var { Apis, FetchChain, ChainStore, ChainConfig } = require("../../libraries/chain");
+var { Apis, FetchChain, ChainStore, ChainConfig } = require("../../src/chain");
 
 var coreAsset;
 
