@@ -5,12 +5,7 @@ const SOCKET_DEBUG = JSON.parse(process.env.npm_config__graphene_chain_socket_de
 class ChainWebSocket {
 
     constructor(ws_server, update_rpc_connection_status_callback) {
-        
-        // What is this for?
-        try { if ( window.location.protocol === "https:") {
-            ws_server = ws_server.replace("ws://", "wss://");
-        } }catch(e) { /* nodejs */ }
-        
+       
         this.update_rpc_connection_status_callback = update_rpc_connection_status_callback;
         var WebSocketClient = typeof(WebSocket) !== "undefined" ? require("ReconnectingWebSocket") : require("websocket").w3cwebsocket;
         try {
