@@ -1,11 +1,11 @@
-var { Aes, PrivateKey, PublicKey, Signature } = require("../../src/ecc");
+var { Aes, PrivateKey, PublicKey, Signature } = require("../../lib/ecc");
 var assert = require("assert");
 
 var Long = require('bytebuffer').Long;
 
 var secureRandom = require('secure-random');
-var hash = require('../../src/ecc/src/hash');
-var key = require('../../src/ecc/src/KeyUtils');
+var hash = require('../../lib/ecc/src/hash');
+var key = require('../../lib/ecc/src/KeyUtils');
 
 describe("ECC", function() {
 

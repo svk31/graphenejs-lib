@@ -1,5 +1,5 @@
 var assert = require("assert");
-var { NumberUtils } = require("../../src/chain");
+var { NumberUtils } = require("../../lib/chain");
 
 describe("Number utils", () => {
     

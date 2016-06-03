@@ -1,4 +1,4 @@
-var { ChainValidation } = require("../../src/chain");
+var { ChainValidation } = require("../../lib/chain");
 var assert = require("assert");
 
 describe("ChainValidation", () => {

@@ -1,4 +1,4 @@
-var {Apis, ChainStore} = require("../src");
+var {Apis, ChainStore} = require("../lib");
 
 Apis.instance("wss://bitshares.openledger.info/ws").init_promise.then((res) => {
     console.log("connected to:", res[0].network);

@@ -1,4 +1,4 @@
-var { Aes, PrivateKey, PublicKey, Address } = require("../../src/ecc");
+var { Aes, PrivateKey, PublicKey, Address } = require("../../lib/ecc");
 var assert = require("assert");
 
 var test = function(key) {

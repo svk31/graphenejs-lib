@@ -1,5 +1,5 @@
 var assert = require('assert');
-var ops = require('../../src/serializer/src/operations');
+var ops = require('../../lib/serializer/src/operations');
 
 describe("operation test", function() {
     
