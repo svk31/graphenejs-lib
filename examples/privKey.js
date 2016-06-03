@@ -1,5 +1,5 @@
 
-var {PrivateKey, key} = require("../");
+var {PrivateKey, key} = require("../src");
 
 let seed = "THIS IS A TERRIBLE BRAINKEY SEED WORD SEQUENCE";
 let pkey = PrivateKey.fromSeed( key.normalize_brainKey(seed) );
