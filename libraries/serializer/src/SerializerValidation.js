@@ -1,21 +1,4 @@
-var _my;
-var is_empty;
-var is_digits;
-var to_number;
-var require_match;
-var require_object_id;
-var require_object_type;
-var get_instance;
-var require_relative_type;
-var get_relative_instance;
-var require_protocol_type;
-var get_protocol_instance;
-var get_protocol_type;
-var require_implementation_type;
-var get_implementation_instance;
 var Long = require('bytebuffer').Long;
-// var BigInteger = require('bigi');
-
 var ChainTypes = require('../../chain/src/ChainTypes');
 
 var MAX_SAFE_INT = 9007199254740991;
@@ -26,14 +9,14 @@ var MIN_SAFE_INT =-9007199254740991;
 
     Validations support a string format for dealing with large numbers.
 */
-module.exports = _my = {
+var _my = {
 
-    is_empty: is_empty=function(value){
+    is_empty: function(value){
         return value === null || value === undefined;
     },
     
     required(value, field_name=""){
-        if (is_empty(value) ){
+        if (this.is_empty(value) ){
             throw new Error(`value required ${field_name} ${value}`);
         }
         return value;
@@ -47,7 +30,7 @@ module.exports = _my = {
     },
     
     string(value){
-        if (is_empty(value) ){ return value; }
+        if (this.is_empty(value) ){ return value; }
         if (typeof value !== "string") {
             throw new Error(`string required: ${value}`);
         }
@@ -55,7 +38,7 @@ module.exports = _my = {
     },
     
     number(value){
-        if (is_empty(value) ){ return value; }
+        if (this.is_empty(value) ){ return value; }
         if (typeof value !== "number") {
             throw new Error(`number required: ${value}`);
         }
@@ -63,7 +46,7 @@ module.exports = _my = {
     },
     
     whole_number(value, field_name=""){
-        if (is_empty(value) ){ return value; }
+        if (this.is_empty(value) ){ return value; }
         if (/\./.test(value) ){
             throw new Error(`whole number required ${field_name} ${value}`);
         }
@@ -71,21 +54,21 @@ module.exports = _my = {
     },
     
     unsigned(value, field_name=""){
-        if (is_empty(value) ){ return value; }
+        if (this.is_empty(value) ){ return value; }
         if (/-/.test(value) ){
             throw new Error(`unsigned required ${field_name} ${value}`);
         }
         return value;
     },
     
-    is_digits: is_digits=function(value){
+    is_digits: function(value){
         if (typeof value === "numeric") { return true; }
         return /^[0-9]+$/.test(value);
     },
     
-    to_number: to_number=function(value, field_name=""){
-        if (is_empty(value) ){ return value; }
-        _my.no_overflow53(value, field_name);
+    to_number: function(value, field_name=""){
+        if (this.is_empty(value) ){ return value; }
+        this.no_overflow53(value, field_name);
         var int_value = (() => {
             if (typeof value === "number") {
                 return value;
@@ -97,10 +80,10 @@ module.exports = _my = {
     },
     
     to_long(value, field_name=""){
-        if (is_empty(value) ){ return value; }
+        if (this.is_empty(value) ){ return value; }
         if (Long.isLong(value) ){ return value; }
         
-        _my.no_overflow64(value, field_name);
+        this.no_overflow64(value, field_name);
         if (typeof value === "number") {
             value = ""+value;
         }
@@ -108,10 +91,10 @@ module.exports = _my = {
     },
     
     to_string(value, field_name=""){
-        if (is_empty(value) ){ return value; }
+        if (this.is_empty(value) ){ return value; }
         if (typeof value === "string") { return value; }
         if (typeof value === "number") {
-            _my.no_overflow53(value, field_name);
+            this.no_overflow53(value, field_name);
             return ""+value;
         }
         if (Long.isLong(value) ){
@@ -121,15 +104,15 @@ module.exports = _my = {
     },
     
     require_test(regex, value, field_name=""){
-        if (is_empty(value) ){ return value; }
+        if (this.is_empty(value) ){ return value; }
         if (!regex.test(value)) {
             throw new Error(`unmatched ${regex} ${field_name} ${value}`);
         }
         return value;
     },
     
-    require_match: require_match=function(regex, value, field_name=""){
-        if (is_empty(value) ){ return value; }
+    require_match: function(regex, value, field_name=""){
+        if (this.is_empty(value) ){ return value; }
         var match = value.match(regex);
         if (match === null) {
             throw new Error(`unmatched ${regex} ${field_name} ${value}`);
@@ -137,29 +120,29 @@ module.exports = _my = {
         return match;
     },
     
-    // require_object_id: require_object_id=function(value, field_name){
-    //     return require_match(
-    //         /^([0-9]+)\.([0-9]+)\.([0-9]+)$/,
-    //         value,
-    //         field_name
-    //     );
-    // },
+    require_object_id: function(value, field_name){
+        return require_match(
+            /^([0-9]+)\.([0-9]+)\.([0-9]+)$/,
+            value,
+            field_name
+        );
+    },
     
     // Does not support over 53 bits
     require_range(min,max,value, field_name=""){
-        if (is_empty(value) ){ return value; }
-        var number = to_number(value);
+        if (this.is_empty(value) ){ return value; }
+        var number = this.to_number(value);
         if (value < min || value > max) {
             throw new Error(`out of range ${value} ${field_name} ${value}`);
         }
         return value;
     },
     
-    require_object_type: require_object_type=function(
+    require_object_type: function(
         reserved_spaces = 1, type, value,
         field_name=""
     ){
-        if (is_empty(value) ){ return value; }
+        if (this.is_empty(value) ){ return value; }
         var object_type = ChainTypes.object_type[type];
         if (!object_type) {
             throw new Error(`Unknown object type ${type} ${field_name} ${value}`);
@@ -171,56 +154,56 @@ module.exports = _my = {
         return value;
     },
     
-    get_instance: get_instance=function(reserve_spaces, type, value, field_name){
-        if (is_empty(value) ){ return value; }
-        require_object_type(reserve_spaces, type, value, field_name);
-        return to_number(value.split('.')[2]);
+    get_instance: function(reserve_spaces, type, value, field_name){
+        if (this.is_empty(value) ){ return value; }
+        this.require_object_type(reserve_spaces, type, value, field_name);
+        return this.to_number(value.split('.')[2]);
     },
     
-    require_relative_type: require_relative_type=function(type, value, field_name){
-        require_object_type(0, type, value, field_name);
+    require_relative_type: function(type, value, field_name){
+        this.require_object_type(0, type, value, field_name);
         return value;
     },
     
-    get_relative_instance: get_relative_instance=function(type, value, field_name){
-        if (is_empty(value) ){ return value; }
-        require_object_type(0, type, value, field_name);
-        return to_number(value.split('.')[2]);
+    get_relative_instance: function(type, value, field_name){
+        if (this.is_empty(value) ){ return value; }
+        this.require_object_type(0, type, value, field_name);
+        return this.to_number(value.split('.')[2]);
     },
     
-    require_protocol_type: require_protocol_type=function(type, value, field_name){
-        require_object_type(1, type, value, field_name);
+    require_protocol_type: function(type, value, field_name){
+        this.require_object_type(1, type, value, field_name);
         return value;
     },
     
-    get_protocol_instance: get_protocol_instance=function(type, value, field_name){
-        if (is_empty(value) ){ return value; }
-        require_object_type(1, type, value, field_name);
-        return to_number(value.split('.')[2]);
+    get_protocol_instance: function(type, value, field_name){
+        if (this.is_empty(value) ){ return value; }
+        this.require_object_type(1, type, value, field_name);
+        return this.to_number(value.split('.')[2]);
     },
     
-    get_protocol_type: get_protocol_type=function(value, field_name){
-        if (is_empty(value) ){ return value; }
-        require_object_id(value, field_name);
+    get_protocol_type: function(value, field_name){
+        if (this.is_empty(value) ){ return value; }
+        this.require_object_id(value, field_name);
         var values = value.split('.');
-        return to_number(values[1]);
+        return this.to_number(values[1]);
     },
         
     get_protocol_type_name(value, field_name){
-        if (is_empty(value) ){ return value; }
-        var type_id = get_protocol_type(value, field_name);
+        if (this.is_empty(value) ){ return value; }
+        var type_id = this.get_protocol_type(value, field_name);
         return (Object.keys(ChainTypes.object_type))[type_id];
     },
     
-    require_implementation_type: require_implementation_type=function(type, value, field_name){
-        require_object_type(2, type, value, field_name);
+    require_implementation_type: function(type, value, field_name){
+        this.require_object_type(2, type, value, field_name);
         return value;
     },
     
-    get_implementation_instance: get_implementation_instance=function(type, value, field_name){
-        if (is_empty(value) ){ return value; }
-        require_object_type(2, type, value, field_name);
-        return to_number(value.split('.')[2]);
+    get_implementation_instance: function(type, value, field_name){
+        if (this.is_empty(value) ){ return value; }
+        this.require_object_type(2, type, value, field_name);
+        return this.to_number(value.split('.')[2]);
     },
 
     // signed / unsigned decimal
@@ -240,7 +223,7 @@ module.exports = _my = {
         }
         if (Long.isLong(value) ){
             // typeof value.toInt() is 'number'
-            no_overflow53(value.toInt(), field_name);
+            this.no_overflow53(value.toInt(), field_name);
             return;
         }
         throw `unsupported type ${field_name}: (${typeof value}) ${value}`;
@@ -253,7 +236,7 @@ module.exports = _my = {
         
         // BigInteger#isBigInteger https://github.com/cryptocoinjs/bigi/issues/20
         if (value.t !== undefined && value.s !== undefined) {
-            _my.no_overflow64(value.toString(), field_name);
+            this.no_overflow64(value.toString(), field_name);
             return;
         }
         
@@ -284,4 +267,6 @@ module.exports = _my = {
             
         throw `unsupported type ${field_name}: (${typeof value}) ${value}`;
     }
-    };
+};
+
+module.exports = _my;
