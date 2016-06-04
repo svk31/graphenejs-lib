@@ -170,6 +170,15 @@ describe("ECC", function() {
                 "derive child from private key"
             )
         })
+
+        it("Suggest brainkey", function() {
+            let dictionary = require("./dictionary");
+
+            let brainKey = key.suggest_brain_key(dictionary.en);
+            assert.equal(16, brainKey.split(" ").length);
+        })
+
+
         
         // "many keys" works, not really needed
         // it("many keys", function() {
