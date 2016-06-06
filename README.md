@@ -12,7 +12,7 @@ Most of this code was written by [jcalfeee](https://github.com/jcalfee), my work
 
 This library can be obtained through npm:
 ```
-npm install graphene-crypto
+npm install graphenejs-lib
 ```
 
 ## Usage
@@ -24,7 +24,7 @@ This library provides a websocket rpc connection and other utility functions to 
 
 #### Api calls
 ```
-var {Apis} = require("graphene-crypto");
+var {Apis} = require("graphenejs-lib");
 Apis.instance("wss://bitshares.openledger.info/ws").init_promise.then((res) => {
     console.log("connected to:", res[0].network);
     Apis.instance().db_api().exec( "set_subscribe_callback", [ updateListener, true ] )
@@ -42,7 +42,7 @@ The Chain library contains a complete state container called the ChainStore. The
 The ChainStore has several useful methods to retrieve, among other things, objects, assets and accounts using either object ids or asset/account names. These methods are synchronous and will return `undefined` to indicate fetching in progress, and `null` to indicate that the object does not exist.
 
 ```
-var {Apis, ChainStore} = require("graphene-crypto");
+var {Apis, ChainStore} = require("graphenejs-lib");
 
 Apis.instance("wss://bitshares.openledger.info/ws").init_promise.then((res) => {
     console.log("connected to:", res[0].network);
@@ -66,7 +66,7 @@ The ECC library contains all the crypto functions for private and public keys as
 As a quick example, here's how to generate a new private key from a seed (a brainkey for example):
 
 ```
-var {PrivateKey, key} = require("graphene-crypto");
+var {PrivateKey, key} = require("graphenejs-lib");
 
 let seed = "THIS IS A TERRIBLE BRAINKEY SEED WORD SEQUENCE";
 let pkey = PrivateKey.fromSeed( key.normalize_brainKey(seed) );
