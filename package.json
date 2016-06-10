@@ -2,12 +2,17 @@
   "name": "graphenejs-lib",
   "version": "0.2.2",
   "description": "Pure JavaScript Bitshares/Graphene library for node.js and browsers.",
+  "browser": {
+      "websocket": false
+  },
   "scripts": {
     "test": "mocha --recursive",
     "test:chain": "mocha ./test/chain --recursive",
     "test:ecc": "mocha ./test/ecc --recursive",
     "test:serializer": "mocha ./test/serializer --recursive",
     "test:watch": "npm test -- --watch",
+    "clean": "rm -rf ./dist/* & rm -rf ./build/*",
+    "prebuild": "npm run clean",
     "build": "babel lib --presets babel-preset-es2015 --out-dir dist",
     "prepublish": "npm run build",
     "doc": "esdoc -c esdoc.json"
