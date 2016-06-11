@@ -8,7 +8,7 @@ var th = require('./test_helper');
 
 var { is } = require("immutable");
 var { PublicKey, PrivateKey } = require("../../lib/ecc");
-var {ChainConfig} = require("../../lib/chain/");
+var { ChainConfig } = require("graphenejs-ws");
 
 describe("types", function() {
 
@@ -61,15 +61,15 @@ describe("types", function() {
     it("public_key sort", function() {
         let mapType = type.map(type.public_key, type.uint16)
         let map = mapType.fromObject([//not sorted
-            ["TEST6FHYdi17RhcUXJZr5fxZm1wvVCpXPekiHeAEwRHSEBmiR3yceK",0],
-            ["TEST5YdgWfAejDdSuq55xfguqFTtbRKLi2Jcz1YtTsCzYgdUYXs92c",0],
-            ["TEST7AGnzGCAGVfFnyvPziN67mfuHx9rx89r2zVoRGW1Aawim1f3Qt",0],
+            ["GPH6FHYdi17RhcUXJZr5fxZm1wvVCpXPekiHeAEwRHSEBmiR3yceK",0],
+            ["GPH5YdgWfAejDdSuq55xfguqFTtbRKLi2Jcz1YtTsCzYgdUYXs92c",0],
+            ["GPH7AGnzGCAGVfFnyvPziN67mfuHx9rx89r2zVoRGW1Aawim1f3Qt",0],
         ])
         let mapObject = mapType.toObject(map)
         assert.deepEqual(mapObject, [ // sorted (witness_node sorts assending by "address" (not pubkey))
-            ["TEST7AGnzGCAGVfFnyvPziN67mfuHx9rx89r2zVoRGW1Aawim1f3Qt",0],
-            ["TEST5YdgWfAejDdSuq55xfguqFTtbRKLi2Jcz1YtTsCzYgdUYXs92c",0],
-            ["TEST6FHYdi17RhcUXJZr5fxZm1wvVCpXPekiHeAEwRHSEBmiR3yceK",0],
+            ["GPH7AGnzGCAGVfFnyvPziN67mfuHx9rx89r2zVoRGW1Aawim1f3Qt",0],
+            ["GPH5YdgWfAejDdSuq55xfguqFTtbRKLi2Jcz1YtTsCzYgdUYXs92c",0],
+            ["GPH6FHYdi17RhcUXJZr5fxZm1wvVCpXPekiHeAEwRHSEBmiR3yceK",0],
         ])
     })
 

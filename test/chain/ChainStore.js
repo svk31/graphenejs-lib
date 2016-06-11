@@ -1,11 +1,11 @@
 var assert = require("assert");
-var Immutable = require("immutable");
-var { Apis, FetchChain, ChainStore, ChainConfig } = require("../../lib/chain");
+var {Apis, ChainConfig} = require("graphenejs-ws");
+var { FetchChain, ChainStore } = require("../../lib/chain");
 
 var coreAsset;
 
-describe("API", () => {
-    
+describe("ChainStore", () => {
+
     // Connect once for all tests
     before(function() {
         return Apis.instance("ws://localhost:8090").init_promise.then(function (result) {
@@ -13,7 +13,7 @@ describe("API", () => {
             ChainStore.init();
         });
     });
-    
+
     // Unsubscribe everything after each test
     afterEach(function() {
         ChainStore.subscribers = new Set();
@@ -25,17 +25,18 @@ describe("API", () => {
     });
 
     describe("Subscriptions", function() {
-        
+
         it("Asset not found", function() {
             return new Promise( function(resolve) {
                 ChainStore.subscribe(function() {
+                    console.log("chainstore sub");
                     assert(ChainStore.getAsset("NOTFOUND") === null)
                     resolve()
                 })
                 assert(ChainStore.getAsset("NOTFOUND") === undefined)
             })
         })
-        
+
         it("Asset by name", function() {
             return new Promise( function(resolve) {
                 ChainStore.subscribe(function() {
@@ -45,7 +46,7 @@ describe("API", () => {
                 assert(ChainStore.getAsset(coreAsset) === undefined)
             })
         })
-        
+
         it("Asset by id", function() {
             return new Promise( function(resolve) {
                 ChainStore.subscribe(function() {
@@ -65,16 +66,16 @@ describe("API", () => {
                 assert(ChainStore.getAsset("2.0.0") === undefined)
             })
         })
-        
-        
+
+
     })
         //     ChainStore.getAccount("not found")
-        //     
+        //
         //     ChainStore.unsubscribe(cb)
         //     // return FetchChain("getAccount", "notfound")
         //     let cb = res => console.log('res',res)
         //     // })
         // })
-    
+
 
 })

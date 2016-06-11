@@ -20,21 +20,7 @@ npm install graphenejs-lib
 Three sub-libraries are included: `ECC`, `Chain` and `Serializer`. Generally only the `ECC` and `Chain` libraries need to be used directly.
 
 ### Chain
-This library provides a websocket rpc connection and other utility functions to handle blockchain state. To obtain a websocket connection to the Openledger API and subscribe to any object updates, use the following code:
-
-#### Api calls
-```
-var {Apis} = require("graphenejs-lib");
-Apis.instance("wss://bitshares.openledger.info/ws").init_promise.then((res) => {
-    console.log("connected to:", res[0].network);
-    Apis.instance().db_api().exec( "set_subscribe_callback", [ updateListener, true ] )
-});
-
-function updateListener(object) {
-    console.log("set_subscribe_callback:\n", object);
-}
-```
-The `set_subscribe_callback` callback (updateListener) will be called whenever an object on the blockchain changes. This is very powerful and can be used to listen to updates for specific accounts, assets or most anything else, as all state changes happens through object updates.
+This library provides utility functions to handle blockchain state.
 
 #### State container
 The Chain library contains a complete state container called the ChainStore. The ChainStore will automatically configure the `set_subscribe_callback` and handle any incoming state changes appropriately. It uses Immutable js for storing its state, so all objects are return as immutable objects. It has its own `subscribe` method that can be used to register a callback that will be called whenever a state change happens.
@@ -42,7 +28,8 @@ The Chain library contains a complete state container called the ChainStore. The
 The ChainStore has several useful methods to retrieve, among other things, objects, assets and accounts using either object ids or asset/account names. These methods are synchronous and will return `undefined` to indicate fetching in progress, and `null` to indicate that the object does not exist.
 
 ```
-var {Apis, ChainStore} = require("graphenejs-lib");
+var {Apis} = require("graphenejs-ws");
+var {ChainStore} = require("graphenejs-lib");
 
 Apis.instance("wss://bitshares.openledger.info/ws").init_promise.then((res) => {
     console.log("connected to:", res[0].network);
