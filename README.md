@@ -20,10 +20,37 @@ npm install graphenejs-lib
 Three sub-libraries are included: `ECC`, `Chain` and `Serializer`. Generally only the `ECC` and `Chain` libraries need to be used directly.
 
 ### Chain
-This library provides utility functions to handle blockchain state.
+This library provides utility functions to handle blockchain state as well as a login class that can be used for simple login functionality using a specific key seed.
+
+#### Login
+The login class uses the following format for keys:
+
+```
+keySeed = accountName + role + password
+```
+
+Using this seed, private keys are generated for either the default roles `active, owner, memo`, or as specified. A minimum password length of 12 characters is enforced, but an even longer password is recommended. Three methods are provided:
+
+```
+generateKeys(account, password, [roles])
+checkKeys(account, password, auths)
+signTransaction(tr)
+```
+
+The auths object should contain the auth arrays from the account object. An example is this:
+
+```
+{
+    active: [
+        ["GPH5Abm5dCdy3hJ1C5ckXkqUH2Me7dXqi9Y7yjn9ACaiSJ9h8r8mL", 1]
+    ]
+}
+```
+
+If checkKeys is successful, you can use signTransaction to sign a TransactionBuilder transaction using the private keys for that account.
 
 #### State container
-The Chain library contains a complete state container called the ChainStore. The ChainStore will automatically configure the `set_subscribe_callback` and handle any incoming state changes appropriately. It uses Immutable js for storing its state, so all objects are return as immutable objects. It has its own `subscribe` method that can be used to register a callback that will be called whenever a state change happens.
+The Chain library contains a complete state container called the ChainStore. The ChainStore will automatically configure the `set_subscribe_callback` and handle any incoming state changes appropriately. It uses Immutable.js for storing the state, so all objects are return as immutable objects. It has its own `subscribe` method that can be used to register a callback that will be called whenever a state change happens.
 
 The ChainStore has several useful methods to retrieve, among other things, objects, assets and accounts using either object ids or asset/account names. These methods are synchronous and will return `undefined` to indicate fetching in progress, and `null` to indicate that the object does not exist.
 
