@@ -6,10 +6,10 @@
     "websocket": false
   },
   "scripts": {
-    "test": "mocha --recursive",
-    "test:chain": "mocha ./test/chain --recursive",
-    "test:ecc": "mocha ./test/ecc --recursive",
-    "test:serializer": "mocha ./test/serializer --recursive",
+    "test": "mocha --compilers js:babel-core/register --recursive",
+    "test:chain": "mocha --compilers js:babel-core/register ./test/chain --recursive",
+    "test:ecc": "mocha --compilers js:babel-core/register ./test/ecc --recursive",
+    "test:serializer": "mocha --compilers js:babel-core/register ./test/serializer --recursive",
     "test:watch": "npm test -- --watch",
     "clean": "rm -rf ./dist/* & rm -rf ./build/*",
     "prebuild": "npm run clean",
@@ -49,6 +49,7 @@
   "devDependencies": {
     "assert": "^1.3.0",
     "babel-cli": "^6.9.0",
+    "babel-core": "^6.9.1",
     "babel-eslint": "^6.0.4",
     "babel-preset-es2015": "^6.9.0",
     "esdoc": "^0.4.3",
