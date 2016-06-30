@@ -1,6 +1,6 @@
 {
   "name": "graphenejs-lib",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "Pure JavaScript Bitshares/Graphene library for node.js and browsers.",
   "browser": {
     "websocket": false
@@ -42,14 +42,14 @@
     "crypto-js": "^3.1.5",
     "ecurve": "^1.0.2",
     "event-emitter": "^0.3.4",
-    "graphenejs-ws": "^0.1.0",
+    "graphenejs-ws": "^0.1.3",
     "immutable": "^3.7.6",
     "secure-random": "^1.1.1"
   },
   "devDependencies": {
     "assert": "^1.3.0",
     "babel-cli": "^6.9.0",
-    "babel-core": "^6.9.1",
+    "babel-core": "^6.10.4",
     "babel-eslint": "^6.0.4",
     "babel-preset-es2015": "^6.9.0",
     "esdoc": "^0.4.3",
