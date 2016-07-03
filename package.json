@@ -1,6 +1,6 @@
 {
   "name": "graphenejs-lib",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "Pure JavaScript Bitshares/Graphene library for node.js and browsers.",
   "browser": {
     "websocket": false
@@ -40,6 +40,7 @@
     "bs58": "^3.0.0",
     "bytebuffer": "^5.0.0",
     "crypto-js": "^3.1.5",
+    "deep-equal": "^1.0.1",
     "ecurve": "^1.0.2",
     "event-emitter": "^0.3.4",
     "graphenejs-ws": "^0.1.3",
