@@ -77,6 +77,13 @@ var test = function(key) {
                 var address = Address.fromPublic(public_key, true, 56);
                 assert.equal(key.Compressed_PTS, address.toString());
             });
+
+            it("Null public key to/from buffer", function() {
+                var public_key = PublicKey.fromStringOrThrow(key.null_public_key);
+                var buffer = public_key.toBuffer();
+                var new_public_key = PublicKey.fromBuffer(buffer);
+                assert.equal(new_public_key.toPublicKeyString(), key.null_public_key);
+            });
         });
     });
 };
@@ -95,6 +102,7 @@ test({
     Uncompressed_BTC:	"GPHLAFmEtM8as1mbmjVcj5dphLdPguXquimn",
     Compressed_BTC:	"GPHANNTSEaUviJgWLzJBersPmyFZBY4jJETY",
     Uncompressed_PTS:	"GPHEgj7RM6FBwSoccGaESJLC3Mi18785bM3T",
-    Compressed_PTS:	"GPHD5rYtofD6D4UHJH6mo953P5wpBfMhdMEi"
+    Compressed_PTS:	"GPHD5rYtofD6D4UHJH6mo953P5wpBfMhdMEi",
+    null_public_key: "GPH1111111111111111111111111111111114T1Anm"
 });
 
