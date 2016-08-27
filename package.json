@@ -1,9 +1,10 @@
 {
   "name": "graphenejs-lib",
-  "version": "0.4.6",
+  "version": "0.4.7",
   "description": "Pure JavaScript Bitshares/Graphene library for node.js and browsers.",
   "browser": {
-    "websocket": false
+    "websocket": false,
+    "crypto": false
   },
   "scripts": {
     "test": "mocha --compilers js:babel-core/register --recursive",
@@ -14,6 +15,9 @@
     "clean": "rm -rf ./dist/* & rm -rf ./build/*",
     "prebuild": "npm run clean",
     "build": "babel lib --presets babel-preset-es2015 --out-dir dist",
+    "prebrowserify": "rm -rf ./build/*",
+    "browserify": "browserify --full-paths dist/browser.js --standalone steemJS -o build/graphenejs-lib.js -d",
+    "postbrowserify": "uglifyjs --compress --mangle --sequences --drop_console --output build/graphenejs-lib.min.js -- build/graphenejs-lib.js",
     "prepublish": "npm run build",
     "doc": "esdoc -c esdoc.json"
   },
@@ -39,6 +43,8 @@
     "bigi": "^1.4.1",
     "bs58": "^3.0.0",
     "bytebuffer": "^5.0.0",
+    "create-hash": "^1.1.2",
+    "create-hmac": "^1.1.4",
     "crypto-js": "^3.1.5",
     "deep-equal": "^1.0.1",
     "ecurve": "^1.0.2",
@@ -53,7 +59,9 @@
     "babel-core": "^6.10.4",
     "babel-eslint": "^6.0.4",
     "babel-preset-es2015": "^6.9.0",
+    "browserify": "^13.1.0",
     "esdoc": "^0.4.3",
-    "mocha": "^2.5.3"
+    "mocha": "^2.5.3",
+    "uglifyjs": "^2.4.10"
   }
 }
