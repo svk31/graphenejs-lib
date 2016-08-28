@@ -4,7 +4,7 @@ var {ChainStore, FetchChain, PrivateKey, TransactionHelper, Aes, TransactionBuil
 var privKey = "5KBuq5WmHvgePmB7w3onYsqLM8ESomM2Ae7SigYuuwg8MDHW7NN";
 let pKey = PrivateKey.fromWif(privKey);
 
-Apis.instance("wss://testnet.bitshares.eu/ws")
+Apis.instance("wss://testnet.bitshares.eu/ws", true)
 .init_promise.then((res) => {
     console.log("connected to:", res[0].network_name, "network");
 

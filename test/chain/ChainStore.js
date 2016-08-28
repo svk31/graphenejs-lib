@@ -8,7 +8,7 @@ describe("ChainStore", () => {
 
     // Connect once for all tests
     before(function() {
-        return Apis.instance("wss://bitshares.openledger.info/ws").init_promise.then(function (result) {
+        return Apis.instance("wss://bitshares.openledger.info/ws", true).init_promise.then(function (result) {
             coreAsset = result[0].network.core_asset;
             ChainStore.init();
         });
