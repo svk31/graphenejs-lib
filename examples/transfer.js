@@ -1,5 +1,5 @@
-var {Apis} = require("graphenejs-ws");
-var {ChainStore, FetchChain, PrivateKey, TransactionHelper, Aes, TransactionBuilder} = require("../lib");
+import {Apis} from "graphenejs-ws";
+import {ChainStore, FetchChain, PrivateKey, TransactionHelper, Aes, TransactionBuilder} from "../lib";
 
 var privKey = "5KBuq5WmHvgePmB7w3onYsqLM8ESomM2Ae7SigYuuwg8MDHW7NN";
 let pKey = PrivateKey.fromWif(privKey);

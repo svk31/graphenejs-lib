@@ -1,39 +1,38 @@
-var { Aes, PrivateKey, PublicKey, Signature } = require("../../lib/ecc");
-var assert = require("assert");
+import { Aes, PrivateKey, PublicKey, Signature, hash, key } from "../../lib";
+import assert from "assert";
+import {Long} from 'bytebuffer';
 
-var Long = require('bytebuffer').Long;
+import secureRandom from 'secure-random';
 
-var secureRandom = require('secure-random');
-var hash = require('../../lib/ecc/src/hash');
-var key = require('../../lib/ecc/src/KeyUtils');
+import dictionary from "./dictionary";
 
 describe("ECC", function() {
 
     describe("Crypto", function() {
 
-        var encrypted_key = 
+        var encrypted_key =
             "37fd6a251d262ec4c25343016a024a3aec543b7a43a208bf66bc80640dff" +
-            "8ac8d52ae4ad7500d067c90f26189f9ee6050a13c087d430d24b88e713f1" + 
+            "8ac8d52ae4ad7500d067c90f26189f9ee6050a13c087d430d24b88e713f1" +
             "5d32cbd59e61b0e69c75da93f43aabb11039d06f";
-        
-        var decrypted_key = 
-            "ab0cb9a14ecaa3078bfee11ca0420ea2" + 
-            "3f5d49d7a7c97f7f45c3a520106491f8" + // 64 hex digits 
-            "00000000000000000000000000000000000000000000000000000000" + 
+
+        var decrypted_key =
+            "ab0cb9a14ecaa3078bfee11ca0420ea2" +
+            "3f5d49d7a7c97f7f45c3a520106491f8" + // 64 hex digits
+            "00000000000000000000000000000000000000000000000000000000" +
             "00000000";
-        
+
         it("Decrypt", function() {
             var aes = Aes.fromSeed("Password01")
             var d = aes.decryptHex(encrypted_key)
             assert.equal(decrypted_key, d, "decrypted key does not match")
         })
-        
+
         it("Encrypt", function() {
             var aes = Aes.fromSeed("Password01")
             var d = aes.encryptHex(decrypted_key)
             assert.equal(encrypted_key, d, "encrypted key does not match")
         })
-        
+
         /*it "Computes public key", ->
             private_key = PrivateKey.fromHex decrypted_key.substring 0, 64
             public_key = private_key.toPublicKey()
@@ -43,7 +42,7 @@ describe("ECC", function() {
             var private_key = PrivateKey.fromSeed("1");
             assert.equal(private_key.toPublicKey().toString(), "GPH8m5UgaFAAYQRuaNejYdS8FVLVp9Ss3K1qAVk5de6F8s3HnVbvA", "private key does not match");
         })
-        
+
         it("sign", function() {
             this.timeout(10000);
             var private_key = PrivateKey.fromSeed("1");
@@ -61,7 +60,7 @@ describe("ECC", function() {
             var receiver = PrivateKey.fromSeed("2");
             var S = sender.get_shared_secret(receiver.toPublicKey());
             var nonce = "289662526069530675";
-            
+
             var ciphertext = Aes.encrypt_with_checksum(
                 sender,
                 receiver.toPublicKey(),
@@ -78,7 +77,7 @@ describe("ECC", function() {
             //console.log '... plaintext',plaintext.toString()
             assert.equal("ff00", plaintext.toString('hex'));
         });
-            
+
         // time-based, probably want to keep these last
         it("key_checksum", function(){
             this.timeout(1500);
@@ -130,30 +129,30 @@ describe("ECC", function() {
             var key_checksum = min_time_elapsed(function(){
                 return key.aes_checksum("password").checksum;
             });
-            
+
             var password_aes = min_time_elapsed(function(){
                 return key.aes_private("password", key_checksum);
             });
-            
+
             // DEBUG console.log('... password_aes',password_aes)
             assert(password_aes !== null);
         });
-        
+
     })
 
     describe("Derivation", ()=> {
-        
+
         let one_time_private = PrivateKey.fromHex("8fdfdde486f696fd7c6313325e14d3ff0c34b6e2c390d1944cbfe150f4457168")
         let to_public = PublicKey.fromStringOrThrow("GPH7vbxtK1WaZqXsiCHPcjVFBewVj8HFRd5Z5XZDpN6Pvb2dZcMqK")
         let secret = one_time_private.get_shared_secret( to_public )
         let child = hash.sha256( secret )
-        
+
         // Check everything above with `wdump((child));` from the witness_node:
         assert.equal(child.toString('hex'), "1f296fa48172d9af63ef3fb6da8e369e6cc33c1fb7c164207a3549b39e8ef698")
-        
+
         let nonce = hash.sha256( one_time_private.toBuffer() )
         assert.equal(nonce.toString('hex'), "462f6c19ece033b5a3dba09f1e1d7935a5302e4d1eac0a84489cdc8339233fbf")
-        
+
         it("child from public", function() {
             assert.equal(
                 to_public.child(child).toString(),
@@ -161,8 +160,8 @@ describe("ECC", function() {
                 "derive child public key"
             );
         });
-        
-        // child = hash.sha256( one_time_private.get_secret( to_public ))
+
+        // child = sha256( one_time_private.get_secret( to_public ))
         it("child from private", function() {
             assert.equal(
                 PrivateKey.fromSeed("alice-brain-key").child(child).toPublicKey().toString(),
@@ -172,42 +171,40 @@ describe("ECC", function() {
         })
 
         it("Suggest brainkey", function() {
-            let dictionary = require("./dictionary");
-
             let brainKey = key.suggest_brain_key(dictionary.en);
             assert.equal(16, brainKey.split(" ").length);
         })
 
 
-        
+
         // "many keys" works, not really needed
         // it("many keys", function() {
-        //     
+        //
         //     this.timeout(10 * 1000)
-        //     
+        //
         //     for (var i = 0; i < 10; i++) {
         //         let privkey1 = key.get_random_key()
         //         let privkey2 = key.get_random_key()
-        //         
+        //
         //         let secret1 = one_time_private.get_shared_secret( privkey1.toPublicKey() )
-        //         let child1 = hash.sha256( secret1 )
-        //         
+        //         let child1 = sha256( secret1 )
+        //
         //         let secret2 = privkey2.get_shared_secret( privkey2.toPublicKey() )
-        //         let child2 = hash.sha256( secret2 )
-        //         
+        //         let child2 = sha256( secret2 )
+        //
         //         it("child from public", ()=> assert.equal(
         //             privkey1.toPublicKey().child(child1).toString(),
         //             privkey2.toPublicKey().child(child2).toString(),
         //             "derive child public key"
         //         ))
-        //         
+        //
         //         it("child from private", ()=> assert.equal(
         //             privkey1.child(child1).toString(),
         //             privkey2.child(child2).toString(),
         //             "derive child private key"
         //         ))
         //     }
-        //     
+        //
         // })
 
     })
@@ -220,8 +217,7 @@ var min_time_elapsed = function(f){
     assert.equal(
         // repeat operations may take less time
         elapsed >= 250 * 0.8, true,
-        `minimum time requirement was not met, instead only ${elapsed/1000.0} elapsed` 
+        `minimum time requirement was not met, instead only ${elapsed/1000.0} elapsed`
     );
     return ret;
 };
-

@@ -1,8 +1,7 @@
-var assert = require("assert");
-var { NumberUtils } = require("../../lib/chain");
+import assert from "assert";
+import { NumberUtils } from "../../lib";
 
 describe("Number utils", () => {
-    
 
     it("to implied decimal", ()=> {
         assert.equal("1", NumberUtils.toImpliedDecimal(1, 0))
@@ -15,6 +14,6 @@ describe("Number utils", () => {
         assert.throws(()=> NumberUtils.toImpliedDecimal("00.100", 2))
         assert.throws(()=> NumberUtils.toImpliedDecimal(9007199254740991 + 1, 1))
     })
-        
+
 
 })

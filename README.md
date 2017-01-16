@@ -55,7 +55,7 @@ The Chain library contains a complete state container called the ChainStore. The
 The ChainStore has several useful methods to retrieve, among other things, objects, assets and accounts using either object ids or asset/account names. These methods are synchronous and will return `undefined` to indicate fetching in progress, and `null` to indicate that the object does not exist.
 
 ```
-var {Apis} = require("graphenejs-ws");
+import {Apis} from "graphenejs-ws";
 var {ChainStore} = require("graphenejs-lib");
 
 Apis.instance("wss://bitshares.openledger.info/ws", true).init_promise.then((res) => {

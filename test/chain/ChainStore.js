@@ -1,14 +1,14 @@
-var assert = require("assert");
-var {Apis, ChainConfig} = require("graphenejs-ws");
-var { FetchChain, ChainStore } = require("../../lib/chain");
+import assert from "assert";
+import {Apis, ChainConfig} from "graphenejs-ws";
+import { FetchChain, ChainStore } from "../../lib";
 
 var coreAsset;
 
 describe("ChainStore", () => {
-
     // Connect once for all tests
     before(function() {
-        return Apis.instance("wss://bitshares.openledger.info/ws", true).init_promise.then(function (result) {
+        /* use wss://bitshares.openledger.info/ws if no local node is available */
+        return Apis.instance("ws://127.0.0.1:8090", true).init_promise.then(function (result) {
             coreAsset = result[0].network.core_asset;
             ChainStore.init();
         });
@@ -29,7 +29,6 @@ describe("ChainStore", () => {
         it("Asset not found", function() {
             return new Promise( function(resolve) {
                 ChainStore.subscribe(function() {
-                    console.log("chainstore sub");
                     assert(ChainStore.getAsset("NOTFOUND") === null)
                     resolve()
                 })

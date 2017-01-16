@@ -1,26 +1,31 @@
 {
   "name": "graphenejs-lib",
-  "version": "0.4.10",
+  "version": "0.5.0",
   "description": "Pure JavaScript Bitshares/Graphene library for node.js and browsers.",
   "browser": {
     "ws": false,
     "crypto": false
   },
   "scripts": {
-    "test": "mocha --compilers js:babel-core/register --recursive",
-    "test:chain": "mocha --compilers js:babel-core/register ./test/chain --recursive",
-    "test:ecc": "mocha --compilers js:babel-core/register ./test/ecc --recursive",
-    "test:serializer": "mocha --compilers js:babel-core/register ./test/serializer --recursive",
+    "test": "BABEL_ENV=test mocha --compilers js:babel-register --recursive",
+    "test:chain": "BABEL_ENV=test mocha --compilers js:babel-register ./test/chain --recursive",
+    "test:ecc": "BABEL_ENV=test mocha --compilers js:babel-register ./test/ecc --recursive",
+    "test:serializer": "BABEL_ENV=test mocha --compilers js:babel-register ./test/serializer --recursive",
     "test:watch": "npm test -- --watch",
-    "clean": "rm -rf ./dist/* & rm -rf ./build/*",
+    "clean": "rm -rf ./dist/* & rm -rf ./build/* & rm -rf ./es/*",
     "prebuild": "npm run clean",
-    "build": "babel lib --presets babel-preset-es2015 --out-dir dist",
-    "build:watch": "babel lib --presets babel-preset-es2015 --out-dir dist --watch",
+    "build": "BABEL_ENV=cjs babel lib -d dist",
+    "build-es": "BABEL_ENV=es babel lib -d es",
+    "postbuild": "npm run build-es",
+    "build:watch": "babel lib -d dist --watch",
     "prebrowserify": "rm -rf ./build/*",
     "browserify": "browserify --full-paths dist/browser.js --standalone steemJS -o build/graphenejs-lib.js -d",
     "postbrowserify": "uglifyjs --compress --mangle --sequences --drop_console --output build/graphenejs-lib.min.js -- build/graphenejs-lib.js",
     "prepublish": "npm run build",
-    "doc": "esdoc -c esdoc.json"
+    "doc": "esdoc -c esdoc.json",
+    "example:transfer": "babel-node examples/transfer",
+    "example:chainStore": "babel-node examples/chainStore",
+    "example:privKey": "babel-node examples/privKey"
   },
   "repository": {
     "type": "git",
@@ -40,6 +45,7 @@
     "node": ">= 6.0.0"
   },
   "main": "./dist/index.js",
+  "jsnext:main": "./es/index.js",
   "dependencies": {
     "bigi": "^1.4.1",
     "bs58": "^3.0.0",
@@ -50,19 +56,21 @@
     "deep-equal": "^1.0.1",
     "ecurve": "^1.0.2",
     "event-emitter": "^0.3.4",
-    "graphenejs-ws": "^0.1.5",
+    "graphenejs-ws": "^0.2.0",
     "immutable": "^3.7.6",
     "secure-random": "^1.1.1"
   },
   "devDependencies": {
     "assert": "^1.3.0",
-    "babel-cli": "^6.9.0",
-    "babel-core": "^6.10.4",
-    "babel-eslint": "^6.0.4",
-    "babel-preset-es2015": "^6.9.0",
+    "babel-cli": "^6.18.0",
+    "babel-core": "^6.21.0",
+    "babel-eslint": "^7.1.1",
+    "babel-plugin-add-module-exports": "^0.2.1",
+    "babel-preset-es2015": "^6.18.0",
+    "babel-preset-stage-1": "^6.16.0",
     "browserify": "^13.1.0",
     "esdoc": "^0.4.3",
-    "mocha": "^2.5.3",
+    "mocha": "^3.2.0",
     "uglifyjs": "^2.4.10"
   }
 }

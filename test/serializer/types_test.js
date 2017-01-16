@@ -1,21 +1,20 @@
-var Convert = require('../../lib/serializer/src/convert');
-var Long = require('bytebuffer').Long;
+import Convert from '../../lib/serializer/src/convert';
+import {Long} from 'bytebuffer';
 
-var assert = require('assert');
-var type = require('../../lib/serializer/src/types');
-var p = require('../../lib/serializer/src/precision');
-var th = require('./test_helper');
+import assert from 'assert';
+import p from '../../lib/serializer/src/precision';
+import th from './test_helper';
 
-var { is } = require("immutable");
-var { PublicKey, PrivateKey } = require("../../lib/ecc");
-var { ChainConfig } = require("graphenejs-ws");
+import { is } from "immutable";
+import { PublicKey, PrivateKey, types } from "../../lib";
+import { ChainConfig } from "graphenejs-ws";
 
 describe("types", function() {
 
     it("vote_id",function() {
         var toHex=function(id){
-            var vote = type.vote_id.fromObject(id);
-            return Convert(type.vote_id).toHex(vote);
+            var vote = types.vote_id.fromObject(id);
+            return Convert(types.vote_id).toHex(vote);
         };
         assert.equal("ff000000", toHex("255:0"));
         assert.equal("00ffffff", toHex("0:"+0xffffff));
@@ -33,7 +32,7 @@ describe("types", function() {
     });
 
     it("set sort", function() {
-        var bool_set = type.set(type.bool);
+        var bool_set = types.set(types.bool);
         // Note, 1,0 sorts to 0,1
         assert.equal("020001", Convert(bool_set).toHex([1,0]));
         th.error("duplicate (set)", function() { return Convert(bool_set).toHex([1,1]); });
@@ -41,14 +40,14 @@ describe("types", function() {
     });
 
     it("string sort", function() {
-        var setType = type.set(type.string);
+        var setType = types.set(types.string);
         var set = setType.fromObject(["a","z","m"])
         var setObj = setType.toObject(set)
         assert.deepEqual(["a","m","z"], setObj, "not sorted")
     });
 
     it("map sort", function() {
-        var bool_map = type.map(type.bool, type.bool);
+        var bool_map = types.map(types.bool, types.bool);
         // 1,1 0,0   sorts to   0,0  1,1
         assert.equal("0200000101", Convert(bool_map).toHex([[1,1],[0,0]]));
         th.error("duplicate (map)", function() { return Convert(bool_map).toHex([[1,1],[1,1]]); });
@@ -59,7 +58,7 @@ describe("types", function() {
     });
 
     it("public_key sort", function() {
-        let mapType = type.map(type.public_key, type.uint16)
+        let mapType = types.map(types.public_key, types.uint16)
         let map = mapType.fromObject([//not sorted
             ["TEST6FHYdi17RhcUXJZr5fxZm1wvVCpXPekiHeAEwRHSEBmiR3yceK",0],
             ["TEST5YdgWfAejDdSuq55xfguqFTtbRKLi2Jcz1YtTsCzYgdUYXs92c",0],
@@ -77,7 +76,7 @@ describe("types", function() {
 
     it("type_id sort", function() {
         // map (protocol_id_type "account"), (uint16)
-        let t = type.map(type.protocol_id_type("account"), type.uint16);
+        let t = types.map(types.protocol_id_type("account"), types.uint16);
         assert.deepEqual( t.fromObject([[1,1],[0,0]]), [[0,0],[1,1]], 'did not sort' )
         assert.deepEqual( t.fromObject([[0,0],[1,1]]), [[0,0],[1,1]], 'did not sort' )
     });

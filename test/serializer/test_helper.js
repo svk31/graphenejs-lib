@@ -1,4 +1,4 @@
-var assert = require('assert');
+import assert from 'assert';
 
 module.exports = {
 
@@ -16,7 +16,7 @@ module.exports = {
             }
         }
     },
-    
+
     print_hex(hex){
         console.log('print_hex');
         ByteBuffer.fromHex(hex).printDebug();
@@ -28,7 +28,7 @@ module.exports = {
             return console.log("print_hex: unparsed or non-transactoin object",e,e.stack);
         }
     },
-            
+
     log_error(error){
         if (error.stack) {
             return console.log('ERROR',error.stack);
@@ -36,7 +36,7 @@ module.exports = {
             return console.log('ERROR',error);
         }
     },
-    
+
     error(message_substring, f){
         var fail = false;
         try {

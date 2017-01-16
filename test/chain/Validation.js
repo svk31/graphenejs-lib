@@ -1,5 +1,5 @@
-var { ChainValidation } = require("../../lib/chain");
-var assert = require("assert");
+import { ChainValidation } from "../../lib";
+import assert from "assert";
 
 describe("ChainValidation", () => {
 
@@ -17,6 +17,6 @@ describe("ChainValidation", () => {
             assert(ChainValidation.is_object_id(3) === false);
         })
     })
-    
+
 
 });
