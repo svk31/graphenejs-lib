@@ -1,0 +1,17 @@
+{
+    "presets": [
+        "./tools/es2015Preset",
+        "stage-1"
+    ],
+    "env": {
+        "cjs": {
+            "plugins": ["add-module-exports"]
+        },
+        "test": {
+            "only": [
+                "lib",
+                "node_modules/graphenejs-ws"
+            ]
+        }
+    }
+}
