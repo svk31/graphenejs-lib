@@ -1,5 +1,7 @@
 # GrapheneJS (graphenejs-lib)
 
+## ATTN: If you're looking to use this with Bitshares, please [bitsharesjs](https://github.com/bitshares/bitsharesjs) instead.
+
 Pure JavaScript Bitshares/Graphene library for node.js and browsers. Can be used to construct, sign and broadcast transactions in JavaScript, and to easily obtain data from the blockchain via public apis.
 
 Most of this code was written by [jcalfeee](https://github.com/jcalfee), my work was mostly just repackaging to a discrete npm package.
